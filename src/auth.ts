@@ -10,6 +10,8 @@ import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { env } from "./env";
 import { cache } from "react";
+import { GitHub } from "arctic";
+import { getBaseUrl } from "./lib/url";
 
 const SESSION_TOKEN_LENGTH = 20;
 const SESSION_EXPIRES_AFTER = 1000 * 60 * 60 * 24 * 30;
@@ -101,6 +103,12 @@ export const getCurrentSession = cache(async () => {
   const result = await validateSessionToken(token);
   return result;
 });
+
+export const github = new GitHub(
+  env.GITHUB_CLIENT_ID,
+  env.GITHUB_CLIENT_SECRET,
+  getBaseUrl() + "/api/auth/github/callback",
+);
 
 // export type SessionValidationResult =
 //   | { session: Session; user: User }
